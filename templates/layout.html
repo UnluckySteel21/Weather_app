@@ -51,6 +51,12 @@
                     value="Meklēt"
                     >
                 </div>
+                 <!-- insert radio button here to chose between 5day and 1 day forcast-->
+              <select class="form-select" aria-label="Default select example" id="inp-days" name="days">
+                <option selected>Prognozes dienu skaits</option>
+                <option value="5">Pēc 5 dienas</option>
+                <option value="1">Pēc 1 diena</option>
+              </select>
             </form>
             <div id="div-results">
               {% if search_rez %}

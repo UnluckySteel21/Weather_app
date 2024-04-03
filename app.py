@@ -17,6 +17,7 @@ def index():
 def get_weather():
     if request.method == 'POST':
         city = request.form['city']
+        days = request.form['days']
 
         # city -> coordinate
         #api_key = "ac54255fd4537cb0be0554fe603f1412"
@@ -32,25 +33,50 @@ def get_weather():
         lon = geodata["lon"]
 
         # coordinate -> weather
-        url_weather = f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric&lang=la'
-        req = get(url_weather)
+        if days == "1":
+            url_weather = f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric&lang=la'
 
-        if req.status_code != 200:
-            return render_template("layout.html",text="Neizdevās ielādēt datus")
-        
-        weatherdata = req.json()
-        temperature = weatherdata['main']['temp']
-        apraksts = weatherdata['weather'][0]['description']
-        icon = weatherdata['weather'][0]['icon']
-        icon_url = f"https://openweathermap.org/img/wn/{icon}@2x.png"
+            req = get(url_weather)
 
-        search_rez = {
-            "temperature": temperature,
-            "apraksts": apraksts,
-            "icon": icon_url
-        }
+            if req.status_code != 200:
+                return render_template("layout.html",text="Neizdevās ielādēt datus")
+            
+            weatherdata = req.json()
+            temperature = weatherdata['main']['temp']
+            apraksts = weatherdata['weather'][0]['description']
+            icon = weatherdata['weather'][0]['icon']
+            icon_url = f"https://openweathermap.org/img/wn/{icon}@2x.png"
 
-        return render_template("layout.html",search_rez=search_rez)
+            search_rez = {
+                "temperature": temperature,
+                "apraksts": apraksts,
+                "icon": icon_url
+            }
+
+            return render_template("layout.html",search_rez=search_rez)
+        elif days == "5":
+            url_weather = f'http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={api_key}&units=metric'
+            req = get(url_weather)
+
+            if req.status_code != 200:
+                return render_template("layout.html",text="Neizdevās ielādēt datus")
+            
+            weatherdata = req.json()
+            forecast = []
+
+            for item in weatherdata['list']:
+                if item['dt_txt'].split()[1] == '12:00:00':  # Check if the time matches
+                    forecast.append({
+                        'date': item['dt_txt'].split()[0],
+                        'time': item['dt_txt'].split()[1],
+                        'temp': item['main']['temp'],
+                        'description': item['weather'][0]['description'],
+                        'icon': item['weather'][0]['icon']
+                    })
+            
+            pprint(forecast)
+
+            return render_template("layout.html")
     else:
         ...
     
