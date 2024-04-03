@@ -52,7 +52,21 @@
                     >
                 </div>
             </form>
-            <div id="div-results"></div>
+            <div id="div-results">
+              {% if search_rez %}
+                <div class="text-center">
+                  <img style="width: 100px;" src="{{search_rez['icon']}}" alt="Ikona">
+                  <h4 style="display: inline-block">{{search_rez["temperature"]}}°C</h4>
+                </div>
+                <div class="text-center">
+                  <h4>{{search_rez["apraksts"]}}</h4>
+                </div>
+              {% elif text %}
+                <div class="text-center">
+                  <h4>{{text}}</h4>
+                </div>
+              {% endif %}
+            </div>
         </div>
       </div>
     </div>
