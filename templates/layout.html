@@ -53,20 +53,34 @@
                 </div>
                  <!-- insert radio button here to chose between 5day and 1 day forcast-->
               <select class="form-select" aria-label="Default select example" id="inp-days" name="days">
-                <option selected>Prognozes dienu skaits</option>
-                <option value="5">Pēc 5 dienas</option>
-                <option value="1">Pēc 1 diena</option>
+                <option selected>Prognoze</option>
+                <option value="5">5 dienām</option>
+                <option value="1">Šodienai</option>
               </select>
             </form>
             <div id="div-results">
               {% if search_rez %}
                 <div class="text-center">
+                  <h4>{{search_rez['place']}} {{search_rez['country']}}</h4>
                   <img style="width: 100px;" src="{{search_rez['icon']}}" alt="Ikona">
                   <h4 style="display: inline-block">{{search_rez["temperature"]}}°C</h4>
                 </div>
                 <div class="text-center">
                   <h4>{{search_rez["apraksts"]}}</h4>
                 </div>
+              {% elif forecast%}
+                {% for day in forecast %}
+                  <div class="text-center">
+                    <h4>{{day['place']}} {{day['country']}}</h4>
+                    <p>Datums: {{day['date']}}</p>
+                    <img style="width: 100px;" src="{{day['icon']}}" alt="Ikona">
+                    <h4 style="display: inline-block">{{day["temp"]}}°C</h4>
+                  </div>
+                  <div class="text-center">
+                    <h4>{{day["description"]}}</h4>
+                  </div>
+                  <hr>
+                {% endfor %}
               {% elif text %}
                 <div class="text-center">
                   <h4>{{text}}</h4>
